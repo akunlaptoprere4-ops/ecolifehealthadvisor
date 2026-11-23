@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoLife &amp; Health Advisor</title>
+  <style>
+    :root {
+      --bg: #f3f7f4;
+      --card: #ffffff;
+      --primary: #1b6b48;
+      --primary-dark: #124d33;
+      --accent: #e6f4ed;
+      --text: #1c2822;
+      --muted: #55665d;
+      --border: #d7e3dc;
+      --danger-bg: #fdecec;
+      --danger-text: #991b1b;
+      --warn-bg: #fff7e6;
+      --warn-text: #92400e;
+      --ok-bg: #e7f8ee;
+      --ok-text: #166534;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 28px auto;
+      padding: 0 16px 40px;
+    }
+
+    .banner {
+      background: linear-gradient(135deg, var(--primary), #268c60);
+      color: #fff;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(18, 77, 51, 0.16);
+      margin-bottom: 18px;
+    }
+
+    .banner h1 {
+      margin: 0 0 6px;
+      font-size: 1.65rem;
+    }
+
+    .banner p {
+      margin: 0;
+      opacity: 0.95;
+      font-size: 0.98rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      background: #fff;
+      color: var(--text);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 180px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .soal-box {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      background: #fcfdfb;
+    }
+
+    .soal-box h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      color: var(--primary-dark);
+    }
+
+    .opsi-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 8px 0;
+      font-weight: 400;
+      cursor: pointer;
+    }
+
+    .opsi-item input {
+      margin-top: 4px;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 11px 18px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .hasil-box {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 12px;
+      background: var(--accent);
+      border: 1px solid #b8dec9;
+    }
+
+    .hasil-item {
+      padding: 10px 0;
+      border-top: 1px solid #cce7d8;
+    }
+
+    .hasil-item:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .chat-log {
+      height: 320px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      background: #f9fbf9;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .msg {
+      max-width: 82%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.94rem;
+    }
+
+    .msg.user {
+      align-self: flex-end;
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .msg.bot {
+      align-self: flex-start;
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .chat-form {
+      display: flex;
+      gap: 10px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .badge-rendah {
+      background: var(--ok-bg);
+      color: var(--ok-text);
+    }
+
+    .badge-sedang {
+      background: var(--warn-bg);
+      color: var(--warn-text);
+    }
+
+    .badge-tinggi {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+    }
+
+    .catatan {
+      margin-top: 12px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="banner">
+      <h1>🌿 ECOLIFE &amp; HEALTH ADVISOR — COMPLETE EDITION 🫁</h1>
+      <p>Menghubungkan Ekosistem, Keanekaragaman Hayati, Teknologi &amp; Kesehatan Napas</p>
+    </div>
+
+    <div class="card">
+      <label for="namaPengguna">Nama Kamu atau Nama Kelompok</label>
+      <input type="text" id="namaPengguna" placeholder="Contoh: Tim Ecolife" value="Tim Ecolife" />
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="bukaTab('kuis', this)">📝 1. Kuis Skenario Kasus</button>
+      <button class="tab-btn" onclick="bukaTab('chatbot', this)">🤖 2. Chatbot Edukasi</button>
+      <button class="tab-btn" onclick="bukaTab('kalkulator', this)">🧮 3. Kalkulator Simulasi</button>
+    </div>
+
+    <!-- FITUR 1: KUIS -->
+    <section id="kuis" class="tab-panel active card">
+      <h2>Mode Kuis Skenario Kasus</h2>
+      <p>Jawablah setiap skenario dengan memilih A, B, C, atau D, lalu klik <strong>Kirim Jawaban</strong>.</p>
+      <div id="daftarSoal"></div>
+      <button class="btn" onclick="prosesKuis()">Kirim Jawaban</button>
+      <div id="hasilKuis"></div>
+    </section>
+
+    <!-- FITUR 2: CHATBOT -->
+    <section id="chatbot" class="tab-panel card">
+      <h2>Mode Chatbot Edukasi</h2>
+      <p>
+        Kata kunci topik: <code>deforestasi</code>, <code>keanekaragaman hayati</code>,
+        <code>pm2.5</code>, <code>asma</code>, <code>masker</code>, <code>teknologi</code>.
+      </p>
+      <div id="chatLog" class="chat-log"></div>
+      <form class="chat-form" onsubmit="kirimPesan(event)">
+        <input type="text" id="inputChat" placeholder="Ketik pertanyaan atau kata kunci..." autocomplete="off" />
+        <button type="submit" class="btn">Kirim</button>
+      </form>
+    </section>
+
+    <!-- FITUR 3: KALKULATOR -->
+    <section id="kalkulator" class="tab-panel card">
+      <h2>Mode Kalkulator Simulasi</h2>
+      <p>Simulasi edukatif tingkat paparan udara harian dan perkiraan kebutuhan bibit pohon reboisasi.</p>
+
+      <div class="grid-2">
+        <div>
+          <label for="kondisiHutan">1. Kondisi Tutupan Hutan &amp; Keanekaragaman Hayati</label>
+          <select id="kondisiHutan">
+            <option value="1.0|Hutan Lebat & Biodiversitas Tinggi">1. Hutan lebat &amp; keanekaragaman hayati tinggi (1.0x)</option>
+            <option value="1.3|Tutupan Hutan Sedang / Terganggu" selected>2. Tutupan hutan sedang / mulai terfragmentasi (1.3x)</option>
+            <option value="1.7|Lahan Gundul / Biodiversitas Rendah">3. Hutan gundul / monokultur / rawan asap (1.7x)</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="jamLuar">2. Aktivitas di Luar Ruangan per Hari (0–24 jam)</label>
+          <input type="number" id="jamLuar" min="0" max="24" step="0.5" value="3" />
+        </div>
+
+        <div>
+          <label for="nilaiAqi">3. Perkiraan Nilai AQI/ISPU Lokasi Saat Ini (0–500)</label>
+          <input type="number" id="nilaiAqi" min="0" max="500" step="1" value="85" />
+        </div>
+
+        <div>
+          <label for="pakaiMasker">4. Memakai Masker Filtrasi (KN95/KF94)?</label>
+          <select id="pakaiMasker">
+            <option value="tidak" selected>Tidak</option>
+            <option value="ya">Ya</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="luasHektar">5. Luas Area Reboisasi (hektar, maks. 10000)</label>
+          <input type="number" id="luasHektar" min="0" max="10000" step="0.1" value="2" />
+        </div>
+      </div>
+
+      <button class="btn" onclick="prosesKalkulator()">Hitung Simulasi</button>
+      <div id="hasilKalkulator"></div>
+    </section>
+  </div>
+
+  <script>
+    const BANK_SOAL = [
+      {
+        judul: "Kasus 1: Deforestasi & Partikulat Udara (PM2.5)",
+        kasus: "Hutan di daerah X gundul akibat alih fungsi lahan dan keanekaragaman hayati menurun drastis. Apa dampak langsungnya bagi sistem pernapasan warga?",
+        opsi: {
+          A: "Meningkatnya risiko ISPA, asma, dan bronkitis karena filtrasi polutan alami berkurang & debu/asap naik",
+          B: "Paru-paru warga kebal terhadap polusi karena kadar oksigen otomatis berlipat ganda",
+          C: "Seluruh alergen dan partikel iritan hilang total tanpa perlu pengendalian polusi",
+          D: "Suhu udara turun drastis dan udara menjadi steril tanpa partikel halus"
+        },
+        benar: "A",
+        penjelasan: "Biologi & Geografi: Kanopi hutan dan keanekaragaman vegetasi menyaring partikel debu/PM2.5 serta menyerap polutan gas. Hilangnya tutupan hutan membuat partikel iritan mudah masuk ke saluran napas bawah (bronkiolus & alveolus) dan memicu peradangan seperti asma, bronkitis, serta ISPA."
+      },
+      {
+        judul: "Kasus 2: Monokultur, Kebakaran Lahan & Kelompok Rentan",
+        kasus: "Hutan berganti menjadi lahan monokultur yang miskin keanekaragaman hayati dan rawan kebakaran lahan. Mengapa anak-anak dan lansia paling terdampak?",
+        opsi: {
+          A: "Asap kebakaran membawa partikel halus & gas iritan (CO, NO2, SO2) yang memperparah peradangan saluran napas",
+          B: "Asap kebakaran lahan menyehatkan alveoli paru-paru pada usia lanjut",
+          C: "Keanekaragaman hayati rendah membuat udara menjadi lebih kaya oksigen murni",
+          D: "Anak-anak dan lansia tidak terpengaruh oleh perubahan kualitas udara"
+        },
+        benar: "A",
+        penjelasan: "Biologi & Geografi: Ekosistem yang terdegradasi dan minim variasi spesies lebih rentan terganggu. Asap pembakaran biomassa mengandung PM2.5 dan gas iritan yang memicu iritasi mukosa, penyempitan saluran napas, serta kambuhnya asma atau gangguan pernapasan kronis pada kelompok rentan."
+      },
+      {
+        judul: "Kasus 3: Integrasi Teknologi & Strategi Kesehatan Napas",
+        kasus: "Di wilayah dengan tutupan hutan menurun dan kualitas udara fluktuatif, kombinasi langkah manakah yang paling tepat?",
+        opsi: {
+          A: "Reboisasi spesies pohon lokal beragam, pantau kualitas udara (ISPU/AQI), & pakai masker saat polusi tinggi",
+          B: "Membakar sampah di halaman rumah setiap sore untuk mengurangi kelembapan",
+          C: "Mengabaikan peringatan kualitas udara buruk selama tidak ada kabut tebal",
+          D: "Menebang pepohonan pinggir jalan agar sinar matahari langsung menyinari aspal"
+        },
+        benar: "A",
+        penjelasan: "Teknologi & Kesehatan: Reboisasi berbasis keanekaragaman hayati lokal memulihkan fungsi ekologis jangka panjang, sementara sensor/aplikasi pemantau kualitas udara (ISPU/AQI) dan masker filtrasi (seperti KN95/KF94) membantu warga mengurangi paparan langsung pada saluran pernapasan."
+      }
+    ];
+
+    function ambilNama() {
+      const val = document.getElementById("namaPengguna").value.trim();
+      return val || "Tim Ecolife";
+    }
+
+    function bukaTab(idTab, tombol) {
+      document.querySelectorAll(".tab-panel").forEach((el) => el.classList.remove("active"));
+      document.querySelectorAll(".tab-btn").forEach((el) => el.classList.remove("active"));
+      document.getElementById(idTab).classList.add("active");
+      tombol.classList.add("active");
+    }
+
+    function renderSoal() {
+      const wadah = document.getElementById("daftarSoal");
+      wadah.innerHTML = BANK_SOAL.map((soal, idx) => {
+        const opsiHtml = Object.entries(soal.opsi)
+          .map(
+            ([huruf, teks]) => `
+            <label class="opsi-item">
+              <input type="radio" name="soal_${idx}" value="${huruf}" />
+              <span><strong>${huruf}.</strong> ${teks}</span>
+            </label>`
+          )
+          .join("");
+
+        return `
+          <div class="soal-box">
+            <h3>${soal.judul}</h3>
+            <p>${soal.kasus}</p>
+            ${opsiHtml}
+          </div>`;
+      }).join("");
+    }
+
+    function prosesKuis() {
+      const nama = ambilNama();
+      let skor = 0;
+      const rincian = [];
+
+      BANK_SOAL.forEach((soal, idx) => {
+        const terpilih = document.querySelector(`input[name="soal_${idx}"]:checked`);
+        const jawaban = terpilih ? terpilih.value : null;
+        const benar = jawaban === soal.benar;
+        if (benar) skor += 1;
+
+        rincian.push(`
+          <div class="hasil-item">
+            <strong>${soal.judul}</strong> —
+            ${benar
+              ? `<span style="color: var(--ok-text); font-weight: 700;">Benar (${jawaban})</span>`
+              : `<span style="color: var(--danger-text); font-weight: 700;">Belum tepat (Jawabanmu: ${jawaban || "belum dipilih"}, Kunci: ${soal.benar})</span>`
+            }
+            <p style="margin: 6px 0 0;">${soal.penjelasan}</p>
+          </div>
+        `);
+      });
+
+      let status = "Pemula — coba fitur Chatbot atau Kalkulator untuk memperdalam konsep.";
+      if (skor === BANK_SOAL.length) {
+        status = "Ahli Ekologi & Kesehatan Napas!";
+      } else if (skor >= 1) {
+        status = "Penjelajah Lingkungan — terus asah pemahamanmu!";
+      }
+
+      document.getElementById("hasilKuis").innerHTML = `
+        <div class="hasil-box">
+          <h3 style="margin-top: 0;">Hasil Kuis — ${nama}</h3>
+          <p><strong>Skor Kamu:</strong> ${skor}/${BANK_SOAL.length} | <strong>Status:</strong> ${status}</p>
+          ${rincian.join("")}
+        </div>
+      `;
+    }
+
+    function tambahPesan(pengirim, teks) {
+      const log = document.getElementById("chatLog");
+      const div = document.createElement("div");
+      div.className = `msg ${pengirim}`;
+      div.textContent = teks;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function jawabBot(raw) {
+      const t = raw.trim().toLowerCase();
+      if (t.includes("deforestasi") || t.includes("hutan gundul") || t.includes("tebang")) {
+        return "Deforestasi mengurangi tutupan vegetasi yang berfungsi menyaring partikel polutan, menstabilkan iklim mikro, dan menjaga keseimbangan ekosistem. Akibatnya, konsentrasi debu/partikulat udara dan risiko iritasi saluran napas (seperti ISPA dan asma) di sekitar wilayah terdampak dapat meningkat.";
+      }
+      if (t.includes("keanekaragaman") || t.includes("biodiversitas") || t.includes("hayati")) {
+        return "Keanekaragaman hayati membuat ekosistem lebih tangguh terhadap gangguan (seperti kebakaran lahan, hama, atau perubahan iklim lokal). Menurunnya keanekaragaman hayati sering berjalan seiring dengan kerusakan habitat dan menurunnya kualitas lingkungan hidup manusia.";
+      }
+      if (t.includes("pm2.5") || t.includes("polusi") || t.includes("asap") || t.includes("debu")) {
+        return "Partikulat halus (seperti PM2.5) berukuran sangat kecil sehingga mampu masuk jauh ke saluran pernapasan dan memicu peradangan. Sumbernya bisa berasal dari asap pembakaran lahan/biomassa, emisi kendaraan, dan debu akibat lahan terbuka.";
+      }
+      if (t.includes("asma") || t.includes("ispa") || t.includes("napas") || t.includes("paru")) {
+        return "Paparan polutan udara, asap, dan iritan lingkungan dapat memicu peradangan serta penyempitan saluran napas, memperburuk gejala asma, bronkitis, atau ISPA. Jika mengalami sesak napas berat, nyeri dada, atau gejala memburuk, segera cari bantuan tenaga medis.";
+      }
+      if (t.includes("masker") || t.includes("strategi") || t.includes("pencegahan")) {
+        return "Strategi perlindungan napas meliputi: (1) mengurangi aktivitas berat di luar saat kualitas udara buruk, (2) menggunakan masker yang menyaring partikel halus (seperti KN95/KF94) saat terpapar polusi/asap, dan (3) menjaga ventilasi/udara dalam ruangan tetap bersih.";
+      }
+      if (t.includes("teknologi") || t.includes("ispu") || t.includes("aqi") || t.includes("sensor")) {
+        return "Teknologi membantu memantau kualitas udara secara real-time melalui indeks seperti ISPU/AQI, pemetaan tutupan hutan/deforasi lewat citra satelit, serta sistem peringatan dini agar masyarakat bisa mengambil tindakan pencegahan lebih awal.";
+      }
+      return "Menarik pertanyaannya! Coba gunakan kata kunci seperti 'deforestasi', 'keanekaragaman hayati', 'pm2.5', 'asma', 'masker', atau 'teknologi'.";
+    }
+
+    function kirimPesan(event) {
+      event.preventDefault();
+      const input = document.getElementById("inputChat");
+      const teks = input.value.trim();
+      if (!teks) return;
+      tambahPesan("user", teks);
+      tambahPesan("bot", jawabBot(teks));
+      input.value = "";
+    }
+
+    function prosesKalkulator() {
+      const nama = ambilNama();
+      const [faktorStr, labelEkosistem] = document.getElementById("kondisiHutan").value.split("|");
+      const faktorEkosistem = parseFloat(faktorStr);
+
+      let jamLuar = parseFloat(document.getElementById("jamLuar").value);
+      let aqi = parseFloat(document.getElementById("nilaiAqi").value);
+      let luasHektar = parseFloat(document.getElementById("luasHektar").value);
+      const pakaiMasker = document.getElementById("pakaiMasker").value;
+
+      if (isNaN(jamLuar) || jamLuar < 0) jamLuar = 0;
+      if (jamLuar > 24) jamLuar = 24;
+      if (isNaN(aqi) || aqi < 0) aqi = 0;
+      if (aqi > 500) aqi = 500;
+      if (isNaN(luasHektar) || luasHektar < 0) luasHektar = 0;
+      if (luasHektar > 10000) luasHektar = 10000;
+
+      const faktorMasker = pakaiMasker === "ya" ? 0.55 : 1.0;
+      const indeksRaw = (aqi / 150.0) * (1.0 + jamLuar / 8.0) * faktorEkosistem * faktorMasker * 50.0;
+      const indeksPaparan = Math.round(indeksRaw * 10) / 10;
+
+      let kategori = "RENDAH";
+      let badgeClass = "badge-rendah";
+      let rekomendasi = "Paparan relatif rendah. Tetap jaga kelestarian pohon sekitar dan pantau kualitas udara secara berkala.";
+
+      if (indeksPaparan >= 70) {
+        kategori = "TINGGI";
+        badgeClass = "badge-tinggi";
+        rekomendasi = "Risiko iritasi saluran napas cukup tinggi (terutama jika punya asma/alergi atau berada di area gundul/berasap). Prioritaskan ruang dengan udara bersih, pakai masker filtrasi yang pas, dan waspadai gejala gangguan napas.";
+      } else if (indeksPaparan >= 35) {
+        kategori = "SEDANG";
+        badgeClass = "badge-sedang";
+        rekomendasi = "Perlu kewaspadaan. Kurangi olahraga berat di luar saat udara memburuk, gunakan masker filtrasi bila perlu, dan dukung penanaman vegetasi lokal.";
+      }
+
+      const pohonPerHektar = 400;
+      const estimasiPohon = Math.round(luasHektar * pohonPerHektar).toLocaleString("id-ID");
+
+      document.getElementById("hasilKalkulator").innerHTML = `
+        <div class="hasil-box">
+          <h3 style="margin-top: 0;">Ringkasan Hasil Simulasi — ${nama}</h3>
+          <p><strong>Kondisi Ekosistem:</strong> ${labelEkosistem}</p>
+          <p>
+            <strong>Indeks Paparan (Simulasi):</strong> ${indeksPaparan}
+            <span class="badge ${badgeClass}">${kategori}</span>
+          </p>
+          <p><strong>Rekomendasi Kesehatan:</strong> ${rekomendasi}</p>
+          <p>
+            <strong>Target Reboisasi:</strong> ~${estimasiPohon} bibit pohon lokal beragam
+            (asumsi ${pohonPerHektar} pohon/ha untuk ${luasHektar} ha)
+          </p>
+          <p class="catatan">
+            Catatan Ilmiah: Angka di atas adalah simulasi edukatif untuk pembelajaran &amp; presentasi, bukan kalkulator diagnosis medis.
+          </p>
+        </div>
+      `;
+    }
+
+    renderSoal();
+    tambahPesan(
+      "bot",
+      "Halo! Silakan tanya tentang deforestasi, keanekaragaman hayati, PM2.5, asma, masker, atau teknologi pemantauan udara."
+    );
+  </script>
+</body>
+</html>
